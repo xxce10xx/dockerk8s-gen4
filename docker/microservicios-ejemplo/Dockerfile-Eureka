@@ -1,0 +1,6 @@
+FROM base-alpine:v1
+LABEL maintainer="cedserh@gmail.com"
+COPY microeureka-0.0.1-SNAPSHOT.jar /opt/lib/eureka-server.jar
+COPY microeureka-0.0.2-SNAPSHOT.jar /opt/lib/eureka-server2.jar
+#ENTRYPOINT ["/usr/bin/java"]
+#CMD ["-jar", "/opt/lib/eureka-server.jar"]

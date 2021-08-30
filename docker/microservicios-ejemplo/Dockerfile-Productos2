@@ -1,0 +1,7 @@
+FROM base-alpine:v1
+LABEL maintainer="cedserh@gmail.com"
+COPY microproductos-0.0.1-SNAPSHOT.jar /opt/lib/productos.jar
+COPY catalogo-entrypoint.sh /opt/bin/catalogo.sh
+RUN chmod 755 /opt/bin/catalogo.sh
+EXPOSE 1111
+CMD ["sh", "/opt/bin/catalogo.sh"]

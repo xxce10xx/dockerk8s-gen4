@@ -1,0 +1,7 @@
+ARG VER_JAR 1
+FROM base-alpine:v1
+LABEL maintainer="cedserh@gmail.com"
+COPY microproductos-0.0.1-SNAPSHOT.jar /opt/lib/productos.jar
+ENTRYPOINT ["/usr/bin/java"]
+CMD ["-jar", "/opt/lib/productos.jar"]
+EXPOSE 1111

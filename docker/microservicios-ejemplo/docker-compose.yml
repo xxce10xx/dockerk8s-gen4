@@ -1,0 +1,48 @@
+version: "3.9"
+services:
+  eureka-server:
+    image: eureka:v1
+    ports:
+      - "8761:8761"
+    restart: always
+    networks:
+      - midleware
+    profiles: ["qa"]
+  eureka-server:
+    image: eureka:v1
+    ports:
+      - "8765:8765"
+    restart: always
+    networks:
+      - midleware
+    profiles: ["prod"]
+  mongodb:
+    image: mongo:latest
+    restart: always
+    networks:
+      - bbdd
+    volumes:
+      - compose:/data/db
+    profiles: ["db"]
+  microproductos:
+    image: productos:v2
+    restart: always
+    ports:
+      - "1111:1111"
+    environment:
+     - SERVER_MONGO=mongodb
+    entrypoint: /opt/bin/catalogo.sh
+    networks:
+      - midleware
+      - bbdd
+    depends_on: 
+      - eureka-server
+      - mongodb
+    profiles:
+      - dev
+volumes:
+  compose:
+networks:
+  midleware:
+  bbdd:
+
