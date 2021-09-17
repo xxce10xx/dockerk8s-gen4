@@ -1,0 +1,19 @@
+Observación: NO OLVIDAR ACTIVAR METRIC-SERVER
+
+PASO 1: Creamos un deployment
+kubectl create deployment php-apache --image=k8s.gcr.io/hpa-example
+
+Paso 2: Hacemos patch al deployment para restringir recursos
+kubectl patch deployment php-apache -p='{"spec":{"template":{"spec":{"containers":[{"name":"hpa-example","resources":{"requests":{"cpu":"200m"}}}]}}}}'
+
+Paso3: Creamos un service
+kubectl create service clusterip php-apache --tcp=80
+
+Paso 4: Creamos el HPA
+kubectl autoscale deployment php-apache --cpu-percent=50 --min=1 --max=10
+
+Paso 5: Levantamos un Pod con busybox para poder generar carga 
+kubectl run -i --tty service-test --image=busybox /bin/sh 
+
+Paso 6: Dentro del container busybox ejecutamos
+while true; do wget -q -O- http://php-apache.default.svc.cluster.local; done

@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-5-7-cred.v1
+  labels:
+    app: mysql-5-7
+data:
+  MYSQL_ROOT_PASSWORD: muyseguro640
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-5-7
+  labels:
+    app: mysql-5-7
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql-5-7
+  template:
+    metadata:
+      labels:
+        app: mysql-5-7      
+    spec:
+      #tolerations:
+      #- key: node.kubernetes.io/unreachable
+        #operator: Equal
+        #value: null
+        #effect: NoSchedule
+      containers:
+      - name: mysql-5-7
+        image: mysql:5.7.30
+        envFrom:
+        - configMapRef:
+            name: mysql-5-7-cred.v1
+        volumeMounts:        
+        - name: mysql-5-7-data
+          mountPath: /var/lib/mysql
+        ports:
+        - containerPort: 3306
+      volumes:
+      - name: mysql-5-7-data
+        hostPath:
+          path: /volumes/db-prod-mysql-5-7/data
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-5-7
+  labels:
+    app: mysql-5-7
+spec:
+  selector:
+    app: mysql-5-7
+  ports:
+  - protocol: TCP
+    port: 3306
